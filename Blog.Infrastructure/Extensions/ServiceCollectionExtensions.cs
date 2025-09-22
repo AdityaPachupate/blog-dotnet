@@ -1,5 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+
 
 namespace Blog.Infrastructure.Extensions
 {

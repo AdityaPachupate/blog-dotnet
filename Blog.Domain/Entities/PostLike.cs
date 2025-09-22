@@ -1,15 +1,11 @@
-﻿// Blog.Domain/Entities/Comment.cs
-using Blog.Domain.Common;
-
-namespace Blog.Domain.Entities
+﻿namespace Blog.Domain.Entities
 {
-    public class Comment : BaseEntity
+    public class PostLike
     {
-        public string Content { get; set; } = string.Empty;
-
-        // Foreign Keys
+        public int Id { get; set; }
         public int PostId { get; set; }
         public string UserId { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public virtual Post Post { get; set; } = null!;
