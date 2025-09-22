@@ -7,8 +7,8 @@ namespace Blog.Domain.Entities
     {
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
-        //public string? Summary { get; set; }
-        //public string? CoverImageUrl { get; set; }
+        public string? Summary { get; set; }
+        public string? CoverImageUrl { get; set; }
         public int Views { get; set; } = 0;
         public bool IsPublished { get; set; } = true;
 
