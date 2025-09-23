@@ -1,0 +1,39 @@
+﻿using AutoMapper;
+using Blog.Application.DTOs;
+using Blog.Domain.Entities;
+using Blog.Domain.Interfaces;
+using MediatR;
+using Microsoft.Extensions.Logging;
+
+namespace Blog.Application.Features.Posts.Commands.CreatePost
+{
+    public class CreatePostCommandHandler(
+            ILogger<CreatePostCommandHandler> logger,
+            IMapper _mapper,
+            IPostRepository _postRepository
+        ) : IRequestHandler<CreatePostCommand, PostDto>
+    {
+        public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+        {
+            logger.LogInformation("Handling CreatePostCommand for Title: {Title}", request.Title);
+
+            var post = new Post
+            {
+                Title = request.Title,
+                Content = request.Content,
+                Summary = request.Summary,
+                CoverImageUrl = request.CoverImageUrl,
+                IsPublished = request.IsPublished,
+                AuthorId = request.AuthorId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            var createdPost = await _postRepository.AddPostAsync(post);
+
+            var postWithDetails = await _postRepository.GetPostWithDetailsAsync(createdPost.Id);
+
+            return _mapper.Map<PostDto>(postWithDetails);
+        }
+    }
+}
