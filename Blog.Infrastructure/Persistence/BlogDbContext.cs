@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Infrastructure.Persistence;
 
-public class BlogDbContext : IdentityDbContext<ApplicationUser>
+public class BlogDbContext : IdentityDbContext<User>
 {
     public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options) { }
 
