@@ -9,8 +9,8 @@ namespace Blog.Application.Features.Posts.Commands.CreatePost
 {
     public class CreatePostCommandHandler(
             ILogger<CreatePostCommandHandler> logger,
-            IMapper _mapper,
-            IPostRepository _postRepository
+            IMapper mapper,
+            IPostRepository postRepository
         ) : IRequestHandler<CreatePostCommand, PostDto>
     {
         public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
@@ -29,11 +29,11 @@ namespace Blog.Application.Features.Posts.Commands.CreatePost
                 UpdatedAt = DateTime.UtcNow
             };
 
-            var createdPost = await _postRepository.AddPostAsync(post);
+            var createdPost = await postRepository.AddPostAsync(post);
 
-            var postWithDetails = await _postRepository.GetPostWithDetailsAsync(createdPost.Id);
+            var postWithDetails = await postRepository.GetPostWithDetailsAsync(createdPost.Id);
 
-            return _mapper.Map<PostDto>(postWithDetails);
+            return mapper.Map<PostDto>(postWithDetails);
         }
     }
 }
