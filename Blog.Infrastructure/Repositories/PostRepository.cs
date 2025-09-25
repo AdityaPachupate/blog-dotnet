@@ -1,7 +1,6 @@
 ﻿// Blog.Infrastructure/Repositories/PostRepository.cs
 using Blog.Domain.Entities;
 using Blog.Domain.Interfaces;
-
 using Blog.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
