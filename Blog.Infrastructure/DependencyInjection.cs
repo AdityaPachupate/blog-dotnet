@@ -1,8 +1,11 @@
-﻿using Blog.Domain.Entities;
+﻿// Blog.Infrastructure/DependencyInjection.cs
+using Blog.Application.Interfaces;
+using Blog.Domain.Entities;
 using Blog.Domain.Interfaces;
 //using Blog.Infrastructure.Data;
 using Blog.Infrastructure.Persistence;
 using Blog.Infrastructure.Repositories;
+using Blog.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +50,9 @@ namespace Blog.Infrastructure
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IPostLikeRepository, PostLikeRepository>();
+
+            // Add services
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }
