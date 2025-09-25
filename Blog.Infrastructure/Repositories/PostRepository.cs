@@ -1,86 +1,56 @@
-﻿using Blog.Domain.Entities;
+﻿// Blog.Infrastructure/Repositories/PostRepository.cs
+using Blog.Domain.Entities;
 using Blog.Domain.Interfaces;
+
 using Blog.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Infrastructure.Repositories
 {
-    internal class PostRepository(BlogDbContext context) : IPostRepository
+    public class PostRepository : BaseRepository<Post>, IPostRepository
     {
-        public async Task<Post> AddPostAsync(Post post)
+        public PostRepository(BlogDbContext context) : base(context) { }
+
+        public async Task<IEnumerable<Post>> GetPostsByAuthorAsync(string authorId)
         {
-            context.Posts.Add(post);
-            await context.SaveChangesAsync();
-            return post;
+            return await _dbSet
+                .Include(p => p.Author)
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .Where(p => p.AuthorId == authorId)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
         }
 
-        public async Task DeletePostAsync(int id)
+        public async Task<IEnumerable<Post>> GetPublishedPostsAsync()
         {
-            var entity = context.Posts.FirstOrDefault(p => p.Id == id);
-            if (entity != null)
+            return await _dbSet
+                .Include(p => p.Author)
+                .Include(p => p.Comments)
+                .Include(p => p.Likes)
+                .Where(p => p.IsPublished)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<Post?> GetPostWithDetailsAsync(int id)
+        {
+            return await _dbSet
+                .Include(p => p.Author)
+                .Include(p => p.Comments)
+                    .ThenInclude(c => c.User)
+                .Include(p => p.Likes)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task IncrementViewCountAsync(int postId)
+        {
+            var post = await _dbSet.FindAsync(postId);
+            if (post != null)
             {
-                context.Posts.Remove(entity);
-                await context.SaveChangesAsync();
+                post.Views++;
+                await _context.SaveChangesAsync();
             }
-        }
-
-        public async Task<IEnumerable<Post>> GetAllPostAsync()
-        {
-           var posts = await context.Posts.ToListAsync();
-           return posts;
-        }
-
-        public async Task<IEnumerable<Post>> GetPostByAuthorAsync(string authorId)
-        {
-            var post = await context.Posts.Where(p => p.AuthorId == authorId).ToListAsync();
-            return post;
-        }
-
-        public async Task<Post?> GetPostByIdAsync(int id)
-        {
-            return await context.Posts.FindAsync(id);
-        }
-
-        public Task<Post?> GetPostWithDetailsAsync(int id)
-        {
-            
-        }
-
-        public Task<IEnumerable<Post>> GetPublishedPostsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task IncrementPostLikesAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task IncrementPostViewsAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async  Task<Post> UpdatePostAsync(Post post)
-        {
-            var existingPost = await context.Posts.FindAsync(post.Id);
-            if (existingPost == null)
-            {
-                throw new InvalidOperationException($"Post with ID {post.Id} not found.");
-            }
-
-            // Update properties
-            existingPost.Title = post.Title;
-            existingPost.Content = post.Content;
-            existingPost.Summary = post.Summary;
-            existingPost.CoverImageUrl = post.CoverImageUrl;
-            existingPost.IsPublished = post.IsPublished;
-            existingPost.AuthorId = post.AuthorId;
-            existingPost.Views = post.Views;
-            existingPost.UpdatedAt = DateTime.UtcNow;
-
-            await context.SaveChangesAsync();
-            return existingPost;
         }
     }
 }

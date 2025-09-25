@@ -18,7 +18,7 @@ namespace Blog.Application.Features.Posts.Queries.GetAllPosts
 
             var posts = request.PublishedOnly
                 ? await postRepository.GetPublishedPostsAsync()
-                : await postRepository.GetAllPostAsync();
+                : await postRepository.GetAllAsync();
 
             return mapper.Map<IEnumerable<PostDto>>(posts);
         }

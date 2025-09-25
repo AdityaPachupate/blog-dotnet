@@ -30,7 +30,7 @@ namespace Blog.Application.Features.Posts.Commands.CreatePost
                 UpdatedAt = DateTime.UtcNow
             };
 
-            var createdPost = await postRepository.AddPostAsync(post);
+            var createdPost = await postRepository.AddAsync(post);
 
             if (createdPost == null)
             {

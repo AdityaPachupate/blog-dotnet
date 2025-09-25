@@ -23,7 +23,7 @@ namespace Blog.Application.Features.Posts.Queries.GetPostById
 
             if (request.IncrementViews)
             {
-                await postRepository.IncrementPostViewsAsync(request.Id);
+                await postRepository.IncrementViewCountAsync(request.Id);
                 post.Views += 1; // Increment the local count to reflect the change
             }
 
