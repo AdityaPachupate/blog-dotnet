@@ -1,4 +1,5 @@
-﻿using Blog.Domain.Entities;
+﻿// Blog.Domain/Interfaces/IPostLikeRepository.cs  
+using Blog.Domain.Entities;
 
 namespace Blog.Domain.Interfaces
 {

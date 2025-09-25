@@ -10,4 +10,6 @@ namespace Blog.Domain.Exceptions
     : Exception($"{resourceType} with id: {resourceIdentifier} doesn't exist")
     {
     }
+
+    
 }

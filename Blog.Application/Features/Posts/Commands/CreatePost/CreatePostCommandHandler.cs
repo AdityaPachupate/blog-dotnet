@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Application.DTOs;
 using Blog.Domain.Entities;
+using Blog.Domain.Exceptions;
 using Blog.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,11 @@ namespace Blog.Application.Features.Posts.Commands.CreatePost
             };
 
             var createdPost = await postRepository.AddPostAsync(post);
+
+            if (createdPost == null)
+            {
+                throw new NotFoundException(nameof(request.Title), request.Title.ToString());
+            }
 
             var postWithDetails = await postRepository.GetPostWithDetailsAsync(createdPost.Id);
 
