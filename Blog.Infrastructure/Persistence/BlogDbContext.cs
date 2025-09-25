@@ -76,7 +76,7 @@ public class BlogDbContext : IdentityDbContext<User>
             entity.HasOne(pl => pl.User)
                     .WithMany(u => u.PostLikes)
                     .HasForeignKey(pl => pl.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
 
             entity.HasIndex(pl => new { pl.PostId, pl.UserId }).IsUnique();
